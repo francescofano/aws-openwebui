@@ -40,9 +40,9 @@ export class OpenWebUiStack extends cdk.Stack {
       encrypted: true,
     });
 
-    // Create EFS Access Point
+    // Create EFS Access Point for the backend data
     const accessPoint = fileSystem.addAccessPoint('OpenWebUiEfsAccessPoint', {
-      path: '/data',
+      path: '/app/backend/data',  // Match the exact path in the container
       createAcl: {
         ownerGid: '1000',
         ownerUid: '1000',
@@ -105,6 +105,7 @@ export class OpenWebUiStack extends cdk.Stack {
       name: 'open-webui-data',
       efsVolumeConfiguration: {
         fileSystemId: fileSystem.fileSystemId,
+        rootDirectory: '/',  // Mount the root directory
         transitEncryption: 'ENABLED',
         authorizationConfig: {
           accessPointId: accessPoint.accessPointId,
