@@ -44,6 +44,44 @@ This project contains the AWS CDK infrastructure code to deploy Open WebUI on AW
 
 After deployment, the ALB DNS name will be output to the console. You can access Open WebUI using this URL.
 
+## Updating Open WebUI
+
+You can update Open WebUI either through AWS CLI or AWS Management Console.
+
+### Using AWS CLI
+
+To update Open WebUI to the latest version:
+
+```bash
+aws ecs update-service --force-new-deployment \
+  --cluster [YOUR-CLUSTER-NAME] \
+  --service [YOUR-SERVICE-NAME]
+```
+
+Replace `[YOUR-CLUSTER-NAME]` and `[YOUR-SERVICE-NAME]` with your actual values. You can find these in the AWS Console or by running:
+```bash
+aws ecs list-clusters
+aws ecs list-services --cluster [YOUR-CLUSTER-NAME]
+```
+
+### Using AWS Management Console
+
+1. Go to AWS Console → ECS
+2. Click on your cluster (named like "OpenWebUiStack-OpenWebUiCluster...")
+3. Select the "Services" tab
+4. Check the box next to your service (named like "OpenWebUiStack-OpenWebUiService...")
+5. Click "Update" button
+6. In the update form:
+   - Leave all settings as they are
+   - Check "Force new deployment" checkbox
+7. Click "Update" to start the deployment
+
+The update process:
+1. Pulls the latest Open WebUI image
+2. Performs a zero-downtime deployment
+3. Automatically rolls back if the new version is unhealthy
+4. Preserves all your data as it's stored in EFS
+
 ## Data Persistence
 
 This deployment uses Amazon EFS for persistent storage. This means:

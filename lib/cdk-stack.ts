@@ -3,6 +3,7 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as efs from 'aws-cdk-lib/aws-efs';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import * as ecs_patterns from 'aws-cdk-lib/aws-ecs-patterns';
 import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
@@ -79,6 +80,13 @@ export class OpenWebUiStack extends cdk.Stack {
     executionRole.addManagedPolicy(
       iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazonECSTaskExecutionRolePolicy')
     );
+
+    // Create the log group explicitly
+    const logGroup = new logs.LogGroup(this, 'OpenWebUiLogGroup', {
+      logGroupName: 'OpenWebUiStack-OpenWebUiServiceTaskDefwebLogGroup86593CDD-8KNWRI7vZfCc',
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      retention: logs.RetentionDays.TWO_WEEKS
+    });
 
     // Create Fargate Service with ALB
     const fargateService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'OpenWebUiService', {
